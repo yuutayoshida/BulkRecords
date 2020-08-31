@@ -1,0 +1,67 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- category別に条件分岐でレイアウト変更-->
+  <div class='detail'>
+    <section class='detail-1'>
+      {% if responses.category == 1 %}
+        <span><img src="{% static 'images/movie.svg' %}" alt=""></span>
+      {% elif responses.category == 2 %}
+        <span><img src="{% static 'images/music.svg' %}" alt=""></span>
+      {% elif responses.category == 3 %}
+        <span><img src="{% static 'images/book.svg' %}" alt=""></span>
+      {% endif %}
+    </section>
+
+    <section class='detail-2'>
+      <h2 class='detail-title'>{{ responses.title }}{{ responses.name }}</h2>
+      <h3>-{{ artist.artist_name }}{{ author }}{{ responses.author }}-</h3>
+    </section>
+
+    <section class='detail-3'>
+      <div class='detail-img'>
+        {% if responses.poster_path %}
+          <img src="http://image.tmdb.org/t/p/w185/{{ responses.poster_path }}" alt="" >
+        {% elif responses.image %}
+          <img src="{{ responses.image }}" alt="" width="20%" >        
+        {% else %}
+          <img src="/media/image/noimage_movie 1.jpg" alt="" width="20%" >
+        {% endif %}
+      </div>
+      <div class='detail-cont'>
+        <div class='detail-cont-1'>
+          {% if responses.category == 1 %}
+            <p>{{ responses.overview }}</p>
+            <iframe src="https://www.youtube.com/embed/{{ trailer.key }}" frameborder="0"></iframe>
+          {% elif responses.category == 2 %}
+            <section class='tracks'>
+              {% for s in tracks %}
+                <br><span>{{ forloop.counter }}.&nbsp;</span>
+                <a href="{{ s.track_url }}">
+                  {{ s.track_name }}
+                  <img src="{% static 'images/spotify.svg' %}" alt="" class='spotify'>
+                </a>
+              {% endfor %}
+            </section>
+          {% elif responses.category == 3 %}
+            <p>{{ responses.caption }}</p>
+          {% endif %}
+        </div>
+        <div class='detail-cont-2'>
+          {% if saved_or.saved == 0 %}
+            <span class='remove-button'><a href="{% url 'polls:save' responses.category responses.id %}">My Pageから削除する</a></span>
+          {% else %}
+            <span class='save-button'><a href="{% url 'polls:save' responses.category responses.id %}">My Pageに保存する</a></span>        
+          {% endif %}
+          <h2 class='saved-count'>{{ saved_user|length }}</h2>
+          <h4 id='saved'>saved</h4>
+          {% for i in saved_user %}
+            <h2 class='saved-user'><a href="{% url 'polls:users_detail' i.user_id %}"><img src="{% static 'images/user.svg' %}" alt="" class='saved-user-icon'>&nbsp;{{ i.user }} <img src="{% static 'images/arrow.svg' %}" alt="" class='saved-user-button'> </a></h2>        
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+  </div>
+{% endblock %}

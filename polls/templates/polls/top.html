@@ -1,0 +1,73 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class='top-content'>
+      <div class='navi'>
+          {% if request.user.is_authenticated %}
+            <br>
+            <a href="{% url 'polls:users_detail' request.user.id %}">マイページ</a>
+            <span>|</span>
+            <a href="{% url 'polls:logout' %}">ログアウト</a>
+          {% else %}
+            <a href="{% url 'polls:login' %}">ログイン</a>
+          {% endif %}
+        </div>
+    <div class='search-form'>
+      <div class='search-item'>
+        <span><img src="{% static 'images/movie.svg' %}" alt=""></span>
+        <form action="" method="GET">
+          <input type="text" name="movie_query" placeholder="movie">
+        </form>
+      </div>
+      <div class='search-item'>
+        <span><img src="{% static 'images/music.svg' %}" alt=""></span>
+        <form action="" method="GET">
+          <input type="text" name="music_query" placeholder="music">
+        </form>       
+      </div>
+      <div class='search-item'>
+        <span><img src="{% static 'images/book.svg' %}" alt=""></span>
+        <form action="" method="GET">
+          <input type="text" name="book_query" placeholder="book">
+        </form>
+      </div>
+    </div>
+    
+      <div class='result-contents right-content grid'>
+      {% for s in responses %}
+        <div class='result-content grid-item'>
+          <!--<a href="{% url 'polls:detail' s.category s.id %}" class='detail-button'>{{ s.title }}</a>-->
+          {% if s.artist_name %}
+            <!--<p>artist:{{ s.artist_name }}</p>-->
+          {% endif %}
+          {% if s.author %}
+            <!--<p>artist:{{ s.author }}</p>-->
+          {% endif %}
+            {% if s.poster_path %}
+            <a href="{% url 'polls:detail' s.category s.id %}" class='detail-button'>
+              <img src="http://image.tmdb.org/t/p/w185/{{ s.poster_path }}" alt="" >
+              <span class='caption'>{{ s.title }}</span>
+            </a>
+            {% elif s.image %}
+            <a href="{% url 'polls:detail' s.category s.id %}" class='detail-button'>
+              <img src="{{ s.image }}" alt="">
+              <span class='caption'>{{ s.title }}</span>
+            </a>
+            {% elif s.img_url %}
+            <a href="{% url 'polls:detail' s.category s.post_id %}" class='detail-button'>
+              <img src="{{ s.img_url }}" alt="">
+              <span class='caption'>{{ s.title }}</span>
+            </a>
+            {% else %}
+              <img src="/media/image/noimage_movie 1.jpg" alt="">
+
+            {% endif %}
+          {% if s.release_date %}
+            <!--<p>{{ s.release_date }}</p>-->
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+{% endblock %}

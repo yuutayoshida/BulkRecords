@@ -1,0 +1,18 @@
+{% extends 'polls/base.html' %}
+{% block content %}
+  <div class='user-data'>
+    <h2 class='user-name'>{{ user.username }}</h2>
+    <h2 class='saved-count'>{{ saved|length }}</h2>
+    <h4 id='saved'>saved</h4>
+  </div>
+  <div class='result-contents grid'>
+    {% for s in saved %}
+      <div class='result-content grid-item'>
+      <a href="{% url 'polls:detail' s.category s.post_id %}" class='detail-button'>
+        <img src="{{ s.img_url }}" alt="">
+        <span class='caption'>{{ s.title }}<br>{{ s.author }}</span>
+      </a>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
